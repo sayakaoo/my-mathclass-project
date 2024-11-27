@@ -1,16 +1,16 @@
-// next.config.js
 module.exports = {
-  headers: async () => {
+  async headers() {
     return [
       {
-        source: '/(.*)',
+        source: '/(.*)',  // すべてのページに適用
         headers: [
           {
             key: 'Content-Security-Policy',
-            value: "default-src 'self'; script-src 'self' https://vercel.live;"
+            value: "default-src 'self'; script-src 'self' https://vercel.live; img-src 'self' data:;"
           },
         ],
       },
     ]
   },
 }
+
