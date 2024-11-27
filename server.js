@@ -1,15 +1,15 @@
-const { OpenAIApi } = require("openai");
+const { OpenAI } = require("openai");
 
-const openai = new OpenAIApi({
+const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
 });
 
 (async () => {
-  const completion = await openai.createChatCompletion({
+  const completion = await openai.chat.completions.create({
     model: "gpt-3.5-turbo",
     messages: [{ role: "user", content: "prompt" }],
   });
-  console.log(completion.data.choices[0].message);
+  console.log(completion.choices[0].message);
 })();
 
 const express = require('express');
