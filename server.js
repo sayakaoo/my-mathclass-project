@@ -1,6 +1,7 @@
 const express = require('express');
 const bodyParser = require('body-parser');
-const { OpenAI } = require('openai'); // OpenAIをインポート
+const { Configuration, OpenAIApi } = require("openai"); // OpenAIをインポート
+require('dotenv').config();
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -9,9 +10,10 @@ app.use(bodyParser.json());
 app.use(express.static('public'));  // 静的ファイルを提供
 
 // OpenAI APIの設定
-const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY, // 環境変数からAPIキーを取得
+const configuration = new Configuration({
+  apiKey: process.env.OPENAI_API_KEY,
 });
+const openai = new OpenAIApi(configuration)
 
 // 解答評価用のAPIエンドポイント
 app.post('/evaluate-answer', async (req, res) => {
@@ -31,7 +33,7 @@ app.post('/evaluate-answer', async (req, res) => {
 ユーザーの解答における「3n + 1」などの言及に対して適切な評価を行ってください。`;
 
   try {
-    const completion = await openai.chat.completions.create({
+    const completion = await openai.createChatCompletion({
       model: 'gpt-3.5-turbo', // 使用するモデル
       messages: [{ role: 'user', content: prompt }],
     });
