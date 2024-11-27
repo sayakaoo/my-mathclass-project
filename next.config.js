@@ -1,15 +1,16 @@
+// next.config.js
 module.exports = {
-  async headers() {
+  headers: async () => {
     return [
       {
-        source: '/(.*)', // すべてのページに適用
+        source: '/(.*)',
         headers: [
           {
             key: 'Content-Security-Policy',
-            value: "default-src 'self'; script-src 'self' https://vercel.live;" // 必要なドメインを追加
-          }
-        ]
-      }
+            value: "default-src 'self'; script-src 'self' https://vercel.live;"
+          },
+        ],
+      },
     ]
-  }
-};
+  },
+}
