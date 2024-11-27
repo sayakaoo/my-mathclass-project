@@ -13,4 +13,9 @@ module.exports = {
     ]
   },
 }
+module.exports = {
+  experimental: {
+    disableOptimizedLoading: true,
+  },
+}
 
