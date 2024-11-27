@@ -32,13 +32,16 @@ app.post('/evaluate-answer', async (req, res) => {
 ユーザーの解答における「3n + 1」などの言及に対して適切な評価を行ってください。`;
 
   try {
-    const completion = await openai.createCompletion({
-      model: 'gpt-3.5-turbo', // 使用するモデル
-      prompt: prompt,
-      max_tokens: 150, // レスポンスのトークン制限
-    });
+    const completion = await openai.createChatCompletion({
+      model: 'gpt-3.5-turbo',
+      messages: [
+          { role: "system", content: "あなたは教師です。以下のルールで正答判定をしてください..." },
+          { role: "user", content: userAnswer }
+      ],
+      max_tokens: 150,
+  });
+  const response = completion.data.choices[0].message.content.trim();
 
-    const response = completion.data.choices[0].text.trim();
     res.json({ evaluation: response }); // APIレスポンスを返す
   } catch (error) {
     console.error('Error:', error);
