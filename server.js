@@ -1,6 +1,6 @@
 const express = require('express');
 const bodyParser = require('body-parser');
-const { Configuration, OpenAIApi } = require('openai'); // OpenAIApiをインポート
+const { OpenAI } = require('openai'); // OpenAIをインポート
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -9,13 +9,9 @@ app.use(bodyParser.json());
 app.use(express.static('public'));  // 静的ファイルを提供
 
 // OpenAI APIの設定
-const configuration = new Configuration({
+const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY, // 環境変数からAPIキーを取得
 });
-const openai = new OpenAIApi(configuration); // OpenAIApiのインスタンスを作成
-
-console.error('Error details:', error.response ? error.response.data : error.message);
-
 
 // 解答評価用のAPIエンドポイント
 app.post('/evaluate-answer', async (req, res) => {
@@ -35,16 +31,12 @@ app.post('/evaluate-answer', async (req, res) => {
 ユーザーの解答における「3n + 1」などの言及に対して適切な評価を行ってください。`;
 
   try {
-    const completion = await openai.createChatCompletion({
-      model: 'gpt-3.5-turbo',
-      messages: [
-          { role: "system", content: "あなたは教師です。以下のルールで正答判定をしてください..." },
-          { role: "user", content: userAnswer }
-      ],
-      max_tokens: 150,
-  });
-  const response = completion.data.choices[0].message.content.trim();
+    const completion = await openai.chat.completions.create({
+      model: 'gpt-3.5-turbo', // 使用するモデル
+      messages: [{ role: 'user', content: prompt }],
+    });
 
+    const response = completion.choices[0].message.content.trim();
     res.json({ evaluation: response }); // APIレスポンスを返す
   } catch (error) {
     console.error('Error:', error);
