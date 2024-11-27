@@ -4,6 +4,7 @@ const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
 });
 
+console.log(process.env.OPENAI_API_KEY);
 (async () => {
   const completion = await openai.chat.completions.create({
     model: "gpt-3.5-turbo",
