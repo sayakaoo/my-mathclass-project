@@ -1,6 +1,6 @@
 const express = require('express');
 const bodyParser = require('body-parser');
-const { Configuration, OpenAIApi } = require('openai');
+const { Configuration } = require('openai');
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -9,9 +9,9 @@ app.use(bodyParser.json());
 app.use(express.static('public'));  // 静的ファイルを提供
 
 // OpenAI APIの設定
-const openai = new OpenAIApi(new Configuration({
-    apiKey: process.env.OPENAI_API_KEY  // 環境変数にAPIキーを設定
-}));
+const configuration = {
+  apiKey: process.env.OPENAI_API_KEY,
+};
 
 // 解答評価用のAPIエンドポイント
 app.post('/evaluate-answer', async (req, res) => {
