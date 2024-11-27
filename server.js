@@ -14,6 +14,9 @@ const configuration = new Configuration({
 });
 const openai = new OpenAIApi(configuration); // OpenAIApiのインスタンスを作成
 
+console.error('Error details:', error.response ? error.response.data : error.message);
+
+
 // 解答評価用のAPIエンドポイント
 app.post('/evaluate-answer', async (req, res) => {
   const userAnswer = req.body.userAnswer;
