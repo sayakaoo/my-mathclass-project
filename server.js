@@ -1,9 +1,8 @@
-const { Configuration, OpenAIApi } = require("openai");
+const { OpenAIApi } = require("openai");
 
-const configuration = new Configuration({
+const openai = new OpenAIApi({
   apiKey: process.env.OPENAI_API_KEY,
 });
-const openai = new OpenAIApi(configuration);
 
 (async () => {
   const completion = await openai.createChatCompletion({
@@ -12,8 +11,6 @@ const openai = new OpenAIApi(configuration);
   });
   console.log(completion.data.choices[0].message);
 })();
-
-
 
 const express = require('express');
 const bodyParser = require('body-parser');
@@ -24,7 +21,6 @@ const port = process.env.PORT || 3000;
 
 app.use(bodyParser.json());
 app.use(express.static('public'));  // 静的ファイルを提供
-
 
 // 解答評価用のAPIエンドポイント
 app.post('/evaluate-answer', async (req, res) => {
@@ -42,6 +38,10 @@ app.post('/evaluate-answer', async (req, res) => {
 以下の解答に基づいて評価を行ってください：
 ユーザーの解答：${userAnswer}
 ユーザーの解答における「3n + 1」などの言及に対して適切な評価を行ってください。`;
+
+  // ここでAPI呼び出しなどの処理を行う
+  // 例：openai.createCompletion(...)
+
 });
 
 app.listen(port, () => {
