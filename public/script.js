@@ -2,15 +2,26 @@
 const form = document.getElementById('answer-form');
 form.addEventListener('submit', async (e) => {
   e.preventDefault(); // ページリロードを防止
+
   const userAnswer = document.getElementById('userAnswer').value;
 
-  const response = await fetch('/api/evaluate', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ userAnswer }),
-  });
-  const result = await response.json();
-  document.getElementById('response').textContent = result.message;
+  try {
+    const response = await fetch('/api/evaluate', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ userAnswer }),
+    });
+
+    if (response.ok) {
+      const result = await response.json();
+      document.getElementById('response').textContent = result.message;
+    } else {
+      document.getElementById('response').textContent = 'サーバーエラーが発生しました。もう一度お試しください。';
+    }
+  } catch (error) {
+    console.error('通信エラー:', error);
+    document.getElementById('response').textContent = '通信エラーが発生しました。';
+  }
 });
 
 // 音声入力の処理
