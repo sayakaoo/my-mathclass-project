@@ -1,11 +1,3 @@
-app.use((req, res, next) => {
-  res.setHeader(
-    'Content-Security-Policy',
-    "default-src 'self'; script-src 'self' https://vercel.live"
-  );
-  next();
-});
-
 require('dotenv').config();
 const { OpenAI } = require('openai');
 
@@ -15,9 +7,30 @@ const openai = new OpenAI({
 
 const express = require('express');
 const bodyParser = require('body-parser');
+const path = require('path');
+const port = process.env.PORT || 3000;
 
 const app = express();
-const port = process.env.PORT || 3000;
+
+app.use(express.static(path.join(__dirname, 'public')));
+
+app.use((req, res, next) => {
+  res.setHeader(
+    'Content-Security-Policy',
+    "default-src 'self'; script-src 'self' https://vercel.live"
+  );
+  next();
+});
+
+// それ以外の全てのリクエストに対してindex.htmlを返す
+app.get('*', (req, res) => {
+  res.sendFile(path.resolve(__dirname, 'public', 'index.html'));
+});
+app.listen(3000, () => {
+  console.log('Server is running on http://localhost:3000');
+});
+
+module.exports = app;
 
 app.use(bodyParser.json());
 app.use(express.static('public')); // 静的ファイルを提供
