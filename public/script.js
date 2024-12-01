@@ -1,4 +1,6 @@
 // 音声入力の処理
+console.error('こんに');
+
 const startVoiceButton = document.getElementById('start-voice');
 startVoiceButton.addEventListener('click', () => {
   const recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
