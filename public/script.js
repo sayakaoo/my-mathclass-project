@@ -7,6 +7,7 @@ startVoiceButton.addEventListener('click', () => {
 
   recognition.onresult = async (event) => {
     const transcript = event.results[0][0].transcript; // 認識結果を取得
+    console.log("音声認識結果:", transcript); // 追加してみる
 
     try {
       // 音声認識結果を直接送信
@@ -19,6 +20,7 @@ startVoiceButton.addEventListener('click', () => {
       if (response.ok) {
         const result = await response.json();
         const message = result.message;
+        console.log("サーバーレスポンス:", message); // ここも追加してみる
 
         // ChatGPTの応答に応じた出力
         if (message.includes('正解')) {
