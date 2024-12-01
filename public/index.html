@@ -8,8 +8,14 @@
 </head>
 <body>
   <h1>正答判定システム</h1>
+  <form id="answer-form">
+    <label for="userAnswer">答えを入力:</label>
+    <input type="text" id="userAnswer" placeholder="答えを入力してください">
+    <button type="submit">送信</button>
+  </form>
   <div id="response"></div>
   <button id="start-voice">音声入力を開始</button>
+  
   <script src="./script.js"></script>
 </body>
 </html>
