@@ -1,29 +1,3 @@
-// 文字入力送信の処理
-const form = document.getElementById('answer-form');
-form.addEventListener('submit', async (e) => {
-  e.preventDefault(); // ページリロードを防止
-
-  const userAnswer = document.getElementById('userAnswer').value;
-
-  try {
-    const response = await fetch('/api/evaluate', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ userAnswer }),
-    });
-
-    if (response.ok) {
-      const result = await response.json();
-      document.getElementById('response').textContent = result.message;
-    } else {
-      document.getElementById('response').textContent = 'サーバーエラーが発生しました。もう一度お試しください。';
-    }
-  } catch (error) {
-    console.error('通信エラー:', error);
-    document.getElementById('response').textContent = '通信エラーが発生しました。';
-  }
-});
-
 // 音声入力の処理
 const startVoiceButton = document.getElementById('start-voice');
 startVoiceButton.addEventListener('click', () => {
@@ -31,9 +5,35 @@ startVoiceButton.addEventListener('click', () => {
   recognition.lang = 'ja-JP'; // 日本語設定
   recognition.start();
 
-  recognition.onresult = (event) => {
+  recognition.onresult = async (event) => {
     const transcript = event.results[0][0].transcript; // 認識結果を取得
-    document.getElementById('userAnswer').value = transcript; // 入力欄に表示
+
+    try {
+      // 音声認識結果を直接送信
+      const response = await fetch('/api/evaluate', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ userAnswer: transcript }),
+      });
+
+      if (response.ok) {
+        const result = await response.json();
+        const message = result.message;
+
+        // ChatGPTの応答に応じた出力
+        if (message.includes('正解')) {
+          console.log(1); // 正解を含む場合
+        } else if (message.startsWith('不正解')) {
+          console.log(2); // 不正解から始まる場合
+        } else {
+          console.error('予期しない応答:', message); // 予期しない応答
+        }
+      } else {
+        console.error('サーバーエラーが発生しました。');
+      }
+    } catch (error) {
+      console.error('通信エラー:', error);
+    }
   };
 
   recognition.onerror = (event) => {
